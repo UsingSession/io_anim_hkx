@@ -50,7 +50,7 @@ class hkaImportOperator(bpy.types.Operator, ImportHelper):
                     try:
                         stderr_text = process.stderr.decode('utf-8', errors='replace')
                         error_msg += f"\nError: {stderr_text}"
-                    except:
+                    except (UnicodeDecodeError, AttributeError):
                         error_msg += f"\nError: (binary output)"
                 self.report({'ERROR'}, error_msg)
                 return {'CANCELLED'}
