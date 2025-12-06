@@ -40,12 +40,33 @@ class hkaImportOperator(bpy.types.Operator, ImportHelper):
         anim_bin_file = dirname + '/tmp/' + basename + '.bin'
 
         command = dirname + '/bin/hkdump-bin.exe'
-        process = subprocess.run([command, '-o', anim_bin_file, anim_hkx_file])
+        try:
+            process = subprocess.run([command, '-o', anim_bin_file, anim_hkx_file], 
+                                   capture_output=True, text=True, check=False)
+            
+            if process.returncode != 0:
+                error_msg = f"hkdump-bin.exe failed with return code {process.returncode}"
+                if process.stderr:
+                    error_msg += f"\nError: {process.stderr}"
+                self.report({'ERROR'}, error_msg)
+                return {'CANCELLED'}
+            
+            # Check if the output file was created and has content
+            if not os.path.exists(anim_bin_file):
+                self.report({'ERROR'}, f"Output file not created: {anim_bin_file}")
+                return {'CANCELLED'}
+            
+            if os.path.getsize(anim_bin_file) == 0:
+                self.report({'ERROR'}, f"Output file is empty: {anim_bin_file}")
+                return {'CANCELLED'}
 
-        # 'use_anim' value from default settings addons
-        use_anim = self.properties.use_anim # type: bool
-
-        if process.returncode == 0:
+            # 'use_anim' value from default settings addons
+            use_anim = self.properties.use_anim # type: bool
+            
             import_hkafile(skeleton_file, anim_bin_file, use_anim)
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Import failed: {str(e)}")
+            return {'CANCELLED'}
 
         return {'FINISHED'}

@@ -11,6 +11,8 @@ def read_headerstring(file):
     bytes = b''
     while True:
         c = file.read(1)
+        if not c:  # End of file
+            raise ValueError('Unexpected end of file while reading header string')
         if c == b'\x0a':  # '\n'
             break
         bytes += c
@@ -22,6 +24,8 @@ def read_cstring(file):
     bytes = b''
     while True:
         c = file.read(1)
+        if not c:  # End of file
+            raise ValueError('Unexpected end of file while reading C string')
         if c == b'\x00':
             break
         bytes += c
@@ -30,19 +34,31 @@ def read_cstring(file):
 
 
 def read_float(file):
-    return unpack('<f', file.read(4))[0]
+    data = file.read(4)
+    if len(data) < 4:
+        raise ValueError(f'Unexpected end of file: expected 4 bytes for float, got {len(data)}')
+    return unpack('<f', data)[0]
 
 
 def read_int(file):
-    return unpack('<i', file.read(4))[0]
+    data = file.read(4)
+    if len(data) < 4:
+        raise ValueError(f'Unexpected end of file: expected 4 bytes for int, got {len(data)}')
+    return unpack('<i', data)[0]
 
 
 def read_short(file):
-    return unpack('<h', file.read(2))[0]
+    data = file.read(2)
+    if len(data) < 2:
+        raise ValueError(f'Unexpected end of file: expected 2 bytes for short, got {len(data)}')
+    return unpack('<h', data)[0]
 
 
 def read_vector4_raw(file):
-    return unpack('<4f', file.read(16))
+    data = file.read(16)
+    if len(data) < 16:
+        raise ValueError(f'Unexpected end of file: expected 16 bytes for vector4, got {len(data)}')
+    return unpack('<4f', data)
 
 
 def read_vector4(file):
