@@ -12,7 +12,7 @@ def read_headerstring(file):
     while True:
         c = file.read(1)
         if not c:  # End of file
-            raise ValueError('Unexpected end of file while reading header string')
+            raise ValueError('Unexpected end of file while reading line-terminated header string')
         if c == b'\x0a':  # '\n'
             break
         bytes += c
@@ -25,7 +25,7 @@ def read_cstring(file):
     while True:
         c = file.read(1)
         if not c:  # End of file
-            raise ValueError('Unexpected end of file while reading C string')
+            raise ValueError('Unexpected end of file while reading null-terminated C string')
         if c == b'\x00':
             break
         bytes += c

@@ -32,12 +32,16 @@ class hkaExportOperator(bpy.types.Operator, ExportHelper):
 
             command = dirname + '/bin/hkconv.exe'
             process = subprocess.run([command, '-o', anim_hkx_file, anim_bin_file],
-                                   capture_output=True, text=True, check=False)
+                                   capture_output=True, check=False)
             
             if process.returncode != 0:
                 error_msg = f"hkconv.exe failed with return code {process.returncode}"
                 if process.stderr:
-                    error_msg += f"\nError: {process.stderr}"
+                    try:
+                        stderr_text = process.stderr.decode('utf-8', errors='replace')
+                        error_msg += f"\nError: {stderr_text}"
+                    except:
+                        error_msg += f"\nError: (binary output)"
                 self.report({'ERROR'}, error_msg)
                 return {'CANCELLED'}
                 
