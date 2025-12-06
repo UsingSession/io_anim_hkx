@@ -23,7 +23,7 @@ class Panel(bpy.types.Panel):
     """Creates a Panel in the 3D view Tools panel"""
     bl_label = "Custom Icon Preview Panel"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
 
     def draw(self, context):
         global hkx_icons

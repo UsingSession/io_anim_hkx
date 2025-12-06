@@ -1,12 +1,12 @@
 # Blender HKX Addon
-Blender ^2.8.0 HKX Addon: Import/Export animation files of The Elder Scrolls V: Skyrim
+Blender HKX Addon: Import/Export animation files of The Elder Scrolls V: Skyrim (Compatible with Blender 2.8+, 4.x, and 5.x)
 
 ## Feature
 - Import HKX: Import anim.hkx as Pose or Animation
 - Export HKX: Export Pose as anim.hkx
 
 ## Prerequisite
-- Blender ^2.8.0
+- Blender 2.8.0 or later (including Blender 4.x and 5.x)
 
 ## Install
 Extract the io_anim_hkx folder into addons.
